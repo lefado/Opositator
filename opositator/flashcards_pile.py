@@ -16,11 +16,12 @@ class FlashcardsPile:
         '''
         flashcards = []
         for final_question in parsed_data:
-            flashcard_face = f"<strong>{final_question['question']}</strong>"
+            flashcard_face = f"<div style='text-align:left'><strong>{final_question['question']}</strong>"
             for answer in final_question["answers"]:
                 flashcard_face += f"<br>{answer['answer']}"
                 if answer["correct"]:
-                    flashcard_back = f"<big>{answer['answer']}</big>"
+                    flashcard_back = f"<div style='text-align:left'><big>{answer['answer']}</big></div>"
+            flashcard_face += "</div>"
             flashcards.append((flashcard_face, flashcard_back))
         return flashcards
 
@@ -34,7 +35,8 @@ class FlashcardsPile:
         '''
         Checks if a specific flashcard matches expected pattern.
         '''
-        pattern = r'\<strong\>\d+..+a\).+b\).+c\).+[a-c]\)'
+        html_pattern = re.escape("<div style='text-align:left'><strong>")
+        pattern = html_pattern + r"\d+..+a\).+b\).+c\).+[a-c]"
         flashcard = flashcard[0] + flashcard[1].strip()
         if re.match(pattern, flashcard.strip(), flags=re.DOTALL):
             return True
