@@ -16,9 +16,6 @@ details = input_reader.extract_details(extracted_text)
 parser = Parser(details)
 parsed_data = parser.parse()
 
-questions = []
-for question in parsed_data:
-    questions.append(Question(question['question'], [a['answer'] for a in question['answers']], next((a['answer'] for a in question['answers'] if a['correct']), None)))
 
 # Anki data export
 user_wants_export = input("Would you like to export the test to Anki csv format? (y/n): ") == "y"
@@ -29,8 +26,10 @@ if user_wants_export:
                      f"{flashcards_pile.filename}): "))
     flashcards_pile.to_csv()
 
+questions = []
+for question in parsed_data:
+    questions.append(Question(question['question'], [a['answer'] for a in question['answers']], next((a['answer'] for a in question['answers'] if a['correct']), None)))
 for question in questions:
-
     question.display_question()
     user_answer = get_user_input()
     
