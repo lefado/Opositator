@@ -7,6 +7,7 @@ class FlashcardsPile:
     '''
     def __init__(self, parsed_data) -> None:
         self.flashcards = self.add_style(parsed_data)
+        self.filename = "anki_flashcards.csv"
 
     def add_style(self, parsed_data: list[dict]) -> list[tuple]:
         '''
@@ -22,6 +23,12 @@ class FlashcardsPile:
                     flashcard_back = f"<big>{answer['answer']}</big>"
             flashcards.append((flashcard_face, flashcard_back))
         return flashcards
+
+    def set_filename(self, filename: str) -> None:
+        pattern = r'^[a-zA-Z0-9_-]+\.csv'
+        while not re.match(pattern, filename):
+            filename = input("Wrong filename, choose an alphanumeric name ending with '.csv': ")
+        self.filename = filename
 
     def matches_pattern(self, flashcard: tuple[str, str]) -> bool:
         '''
@@ -56,7 +63,7 @@ class FlashcardsPile:
         Export flashcards to csv so they can be imported in Anki.
         '''
         if not filename:
-            filename = "anki_flashcards.csv"
+            filename = self.filename
         with open(filename, mode='w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file, delimiter=';')
             writer.writerow(['Question with Options', 'Answer'])
