@@ -2,6 +2,9 @@ import re
 import csv
 
 class FlashcardsPile:
+    '''
+    Manages parsed data from test exam and converts them to Anki flashcards format.
+    '''
     def __init__(self, parsed_data) -> None:
         self.flashcards = self.add_style(parsed_data)
 
@@ -26,13 +29,12 @@ class FlashcardsPile:
         '''
         pattern = r'\<strong\>\d+..+a\).+b\).+c\).+[a-c]\)'
         flashcard = flashcard[0] + flashcard[1].strip()
-        # Check if the question text matches the defined pattern
         if re.match(pattern, flashcard.strip(), flags=re.DOTALL):
             return True
         else:
             return False
 
-    def sanity_check(self):
+    def sanity_check(self) -> None:
         '''
         Checks matching pattern for every question in the set printing errors
         and error count and question count.
