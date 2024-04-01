@@ -26,20 +26,20 @@ if user_wants_export:
                      f"{flashcards_pile.filename}): "))
     flashcards_pile.to_csv()
 
-questions = []
-for question in parsed_data:
-    questions.append(Question(question['question'], [a['answer'] for a in question['answers']], next((a['answer'] for a in question['answers'] if a['correct']), None)))
-for question in questions:
-    question.display_question()
-    user_answer = get_user_input()
-    
-    while not question.check_answer(user_answer):
-        print("\nIncorrect!\n")
+# Interactive test exam
+user_wants_test = input("Would you like to start a test? (y/n): ") == "y"
+if user_wants_test:
+    questions = []
+    for question in parsed_data:
+        questions.append(Question(question['question'],
+                                  [a['answer'] for a in question['answers']],
+                                  next((a['answer'] for a in question['answers'] if a['correct']),None)))
+    for question in questions:
         question.display_question()
         user_answer = get_user_input()
 
-    print("\nCorrect!\n")
-
-    # if not question.check_answer(user_answer):
-    #     print("Correct!")
-    # else:
+        while not question.check_answer(user_answer):
+            print("\nIncorrect!\n")
+            question.display_question()
+            user_answer = get_user_input()
+        print("\nCorrect!\n")
